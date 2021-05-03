@@ -1,4 +1,4 @@
-using ProgressMeter
+using ProgressMeter, SharedArrays
 
 println("Single thread:...")
 @time begin 
@@ -16,8 +16,8 @@ end
 
 println("Multithread:...")
 @time begin 
-  a = collect(1:1000000)
-  Threads.@threads @showprogress for i in 1:length(a)
+  a = collect(1:1000000)::SharedArray{Int}
+  @showprogress @distributed for i in 1:length(a)
     while a[i] != 1 
       if a[i] % 2 == 0
         a[i] = a[i] / 2
